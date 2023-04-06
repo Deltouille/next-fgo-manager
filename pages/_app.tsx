@@ -4,6 +4,8 @@ import {ProSidebarProvider, useProSidebar} from 'react-pro-sidebar';
 import Navbar from "@/components/Navbar";
 import Head from "next/head";
 import Header from "@/components/Header";
+import authMiddleware from "@/middleware/checkAuth";
+
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <ProSidebarProvider>

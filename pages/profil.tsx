@@ -1,5 +1,17 @@
 import {Grid, Col, Card, Text, Metric, Title, LineChart, Divider, BarChart, Subtitle, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Badge} from "@tremor/react";
 import {ProgressBar, MarkerBar, DeltaBar, RangeBar, CategoryBar} from "@tremor/react";
+
+export const getServerSideProps = async () => {
+
+    
+
+    return {
+        props: {
+
+        }
+    }
+}
+
 export default function Profil(){
     const lineChartDataServants = [
         {

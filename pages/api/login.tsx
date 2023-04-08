@@ -6,21 +6,21 @@ export default async function (req, res){
 
     const prisma = new PrismaClient();
 
-    const searchUser = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
             email: req.body.email
         }
     });
 
-    if(searchUser !== null) {
-        const password = await bcrypt.compare(req.body.password, searchUser.password).then(function(result: boolean){
+    if(user !== null) {
+        const password = await bcrypt.compare(req.body.password, user.password).then(function(result: boolean){
             return result
         })
 
         if(password){
             const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY);
             const alg = 'HS256'
-            const token = await new jose.SignJWT({ searchUser })
+            const token = await new jose.SignJWT({ user })
                 .setProtectedHeader({ alg })
                 .setIssuedAt()
                 .setIssuer('')

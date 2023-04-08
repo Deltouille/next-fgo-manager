@@ -1,4 +1,4 @@
-import {PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 export default async function (req, res) {
 
@@ -11,6 +11,7 @@ export default async function (req, res) {
             email: req.body.email
         }
     });
+
     if(searchUser === null){
 
         const password = await bcrypt.hash(req.body.password, 10).then(function(hash: string){

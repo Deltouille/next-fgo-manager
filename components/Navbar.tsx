@@ -1,6 +1,8 @@
 import {Sidebar, Menu, MenuItem, SubMenu, useProSidebar} from 'react-pro-sidebar';
 import authMiddleware from "@/middleware/checkAuth";
 import Link from "next/link";
+import {getUserData} from "@/lib/user";
+
 
 export default function Navbar() {
     const { collapseSidebar } = useProSidebar();
@@ -9,8 +11,8 @@ export default function Navbar() {
             <Menu>
                 <MenuItem component={<Link href={"/profil"}/>}> Mon profil </MenuItem>
                 <SubMenu label="Servants">
-                    <MenuItem component={<Link href={"/servants/liste-des-servants"}/>}> Liste des servants </MenuItem>
-                    <MenuItem component={<Link href={"/servants/mes-servants"}/>}> Ma collection de servants </MenuItem>
+                    <MenuItem component={<Link href={"/servant/liste-des-servants"}/>}> Liste des servants </MenuItem>
+                    <MenuItem component={<Link href={"/servant/mes-servants"}/>}> Ma collection de servants </MenuItem>
                 </SubMenu>
                 <SubMenu label="Craft Essences">
                     <MenuItem component={<Link href={"/craft-essences/liste-des-craft-essences"}/>}> Liste des CE </MenuItem>

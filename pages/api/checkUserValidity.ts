@@ -1,4 +1,5 @@
 import {PrismaClient} from "@prisma/client";
+//TODO : Vérification sur le mot de passe
 export default async function (req, res) {
     const prisma = new PrismaClient();
 

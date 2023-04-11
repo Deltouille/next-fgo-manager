@@ -29,7 +29,7 @@ export default async function (req, res) {
         res.status(200).json({message: 'OK'})
 
     }catch (err) {
-        res.status(200).json({message: 'erreur'})
+        res.status(500).json({message: 'erreur'})
     }
 
 }

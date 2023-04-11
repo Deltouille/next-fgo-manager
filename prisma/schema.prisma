@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,8 +8,60 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  password String
-  role String
+  id            Int                @id @default(autoincrement())
+  email         String             @unique
+  password      String
+  role          String
+  servant       ServantInfo[]
+  craft_essence CraftEssenceInfo[]
+}
+
+model Servant {
+  id                   Int           @id @default(autoincrement())
+  servant_name         String
+  servant_class        String
+  servant_rarity       Int
+  servant_face         String
+  servant_collectionNb Int
+  servant_info         ServantInfo[]
+}
+
+model ServantInfo {
+  id             Int      @id @default(autoincrement())
+  servant        Servant  @relation(fields: [servantId], references: [id], onDelete: Cascade)
+  servantId      Int
+  servant_lvl    Int      @default(1)
+  skill_1_lvl    Int      @default(1)
+  skill_2_lvl    Int      @default(1)
+  skill_3_lvl    Int      @default(1)
+  append_1_lvl   Int      @default(1)
+  append_2_lvl   Int      @default(1)
+  append_3_lvl   Int      @default(1)
+  fou_hp         Int      @default(0)
+  fou_atk        Int      @default(0)
+  bond_lvl       Int      @default(0)
+  np_lvl         Int      @default(1)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  date_obtention DateTime @default(now())
+}
+
+model CraftEssence {
+  id                         Int                @id @default(autoincrement())
+  craft_essence_name         String
+  craft_essence_rarity       Int
+  craft_essence_collectionNo Int
+  craft_essence_face         String
+  craft_essence_type         String
+  craft_essence_info         CraftEssenceInfo[]
+}
+
+model CraftEssenceInfo {
+  id                Int          @id @default(autoincrement())
+  craft_essence     CraftEssence @relation(fields: [craftEssenceId], references: [id], onDelete: Cascade)
+  craftEssenceId    Int
+  is_mlb            Boolean      @default(false)
+  craft_essence_lvl Int          @default(1)
+  user              User         @relation(fields: [userId], references: [id])
+  userId            Int
 }

@@ -13,12 +13,19 @@ export const getServerSideProps = async (context) => {
 
     const prisma = new PrismaClient();
 
-    const liste_servants = await prisma.servantInfo.findMany({
+    let liste_servants = await prisma.servantInfo.findMany({
         where: {
             userId: user.id
         },
         include: { servant: true }
-    })
+    });
+
+    liste_servants = liste_servants.map((servant) => {
+        return {
+            ...servant,
+            date_obtention: servant.date_obtention.toLocaleDateString()
+        };
+    });
     
     return {
         props: {

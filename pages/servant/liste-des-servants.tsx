@@ -1,9 +1,7 @@
-import {Grid, Col, Card, Text, Metric, Title, LineChart, Divider, BarChart, Subtitle, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Badge} from "@tremor/react";
-import {ProgressBar, MarkerBar, DeltaBar, RangeBar, CategoryBar} from "@tremor/react";
+import {Grid, Col, Card, Text, Metric, Title, LineChart, Divider, BarChart, Subtitle, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell} from "@tremor/react";
 import {fetchServantData} from "@/lib/api";
 import {getUserData} from "@/lib/user";
 import {PrismaClient} from "@prisma/client";
-import {useState} from "react";
 import Swal from "sweetalert2";
 
 export const getServerSideProps = async (context) => {
@@ -13,28 +11,35 @@ export const getServerSideProps = async (context) => {
     const user = await getUserData(req);
 
     const prisma = new PrismaClient();
-    const servants_of_users = await prisma.servantInfo.findMany({
+    let servants_of_user = await prisma.servantInfo.findMany({
         where: {
             userId: user.id
         },
         include: {servant: true}
-    })
+    });
+
+    servants_of_user = servants_of_user.map((servant) => {
+        return {
+            ...servant,
+            date_obtention: servant.date_obtention.toLocaleDateString()
+        };
+    });
 
     liste_servants.forEach(obj1 => {
-        let obj2 = servants_of_users.find(obj => obj.servant.servant_collectionNb === obj1.collectionNo)
+        let obj2 = servants_of_user.find(obj => obj.servant.servant_collectionNb === obj1.collectionNo)
         obj1.existe = (obj2 !== undefined);
     })
 
     return {
         props: {
             liste_servants,
-            servants_of_users,
+            servants_of_user,
             user
         }
     }
 }
 
-export default function ListeDesServants({ liste_servants, servants_of_users, user}) {
+export default function ListeDesServants({ liste_servants, servants_of_user, user}) {
     const handleSubmit = async (servant, user_info = user) => {
         let data = {
             servant, user_info

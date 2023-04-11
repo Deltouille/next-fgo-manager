@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import {ca} from "date-fns/locale";
 // TODO : Vérification de l'utilisateur
 /**
  * Route d'api pour attribuer un nouveau servant à un utilisateur.
@@ -26,17 +25,6 @@ export default async function (req, res) {
         if(getServant !== null){
             const setServantToUser = await prisma.servantInfo.create({
                 data: {
-                    append_1_lvl: 1,
-                    append_2_lvl: 1,
-                    append_3_lvl: 1,
-                    skill_3_lvl: 1,
-                    skill_2_lvl: 1,
-                    skill_1_lvl: 1,
-                    servant_lvl: 1,
-                    fou_hp: 0,
-                    fou_atk: 0,
-                    bond_lvl: 0,
-                    np_lvl: 1,
                     servantId: getServant.id,
                     userId: user.id
                 }
@@ -62,17 +50,6 @@ export default async function (req, res) {
 
             const setServantToUser = await prisma.servantInfo.create({
                 data: {
-                    append_1_lvl: 1,
-                    append_2_lvl: 1,
-                    append_3_lvl: 1,
-                    skill_3_lvl: 1,
-                    skill_2_lvl: 1,
-                    skill_1_lvl: 1,
-                    servant_lvl: 1,
-                    fou_hp: 0,
-                    fou_atk: 0,
-                    bond_lvl: 0,
-                    np_lvl: 1,
                     servantId: getServant.id,
                     userId: user.id
                 }

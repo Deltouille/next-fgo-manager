@@ -1,3 +1,4 @@
+import exp from "constants";
 
 export async function fetchServantData() {
     const response = await fetch('https://api.atlasacademy.io/export/JP/nice_servant_lang_en.json');
@@ -10,4 +11,23 @@ export async function fetchCraftEssencesData() {
     const data = await response.json();
     return data;
 }
+
+export async function fetchMaterialData() {
+    const response = await fetch('https://api.atlasacademy.io/export/JP/nice_item_lang_en.json');
+    const data = await response.json();
+    return data;
+}
+
+export async function fetchStoryData() {
+    const response = await fetch('https://api.atlasacademy.io/export/JP/basic_war_lang_en.json');
+    const data = await response.json();
+    return data;
+}
+
+export async function fetStoryEventDetails(id: number) {
+    const response = await fetch(`https://api.atlasacademy.io/nice/JP/war/${id}?lang=en`);
+    const data = await response.json();
+    return data;
+}
+
 

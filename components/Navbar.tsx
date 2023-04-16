@@ -18,9 +18,10 @@ export default function Navbar() {
                     <MenuItem component={<Link href={"/craft-essences/liste-des-craft-essences"}/>}> Liste des CE </MenuItem>
                     <MenuItem component={<Link href={"/craft-essences/mes-craft-essences"}/>}> Ma collection de CE </MenuItem>
                 </SubMenu>
-                <MenuItem> Mes matériaux </MenuItem>
+                <MenuItem component={<Link href={"/mes-materiaux/"}/>}> Mes matériaux </MenuItem>
                 <MenuItem> Histoire </MenuItem>
                 <MenuItem> Events </MenuItem>
+                <MenuItem> Servant Coins </MenuItem>
                 <MenuItem> Gestionnaire </MenuItem>
                 <MenuItem> Planificateur </MenuItem>
                 <MenuItem> Statistiques globales </MenuItem>

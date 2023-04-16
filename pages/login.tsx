@@ -2,6 +2,7 @@ import {TextInput, Title} from "@tremor/react";
 import {useState} from "react";
 import Swal from "sweetalert2";
 
+//TODO : Remplacer Swal par les Alerts
 const Login = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -64,7 +65,7 @@ const Login = () => {
             <div className="container mx-auto">
                 <div className="flex justify-center px-6 my-12">
                     <div className="w-full xl:w-3/4 lg:w-11/12 flex shadow-lg">
-                        <div className="w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg" style={{ backgroundImage: "url('https://source.unsplash.com/K4mSJ7kc0As/600x800')" }}></div>
+                        <div className="w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg" style={{ backgroundImage: "url('/images/login-register/wallpaper.jpg')" }}></div>
                         <div className="w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none">
                             <h3 className="pt-4 text-2xl text-center">Bienvenue</h3>
                             <form className="px-8 pt-6 pb-8 mb-4 bg-white rounded">

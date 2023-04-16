@@ -1,8 +1,9 @@
-import {Grid, Col, Card, Text, Metric, Title, LineChart, Divider, BarChart, Subtitle, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell} from "@tremor/react";
+import {Card, Text, Title, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Button} from "@tremor/react";
 import {fetchServantData} from "@/lib/api";
 import {getUserData} from "@/lib/user";
 import {PrismaClient} from "@prisma/client";
-import Swal from "sweetalert2";
+import {useState} from "react";
+import Alert from "@/components/Alert";
 
 export const getServerSideProps = async (context) => {
     const liste_servants = await fetchServantData();
@@ -30,6 +31,8 @@ export const getServerSideProps = async (context) => {
         obj1.existe = (obj2 !== undefined);
     })
 
+    console.log(liste_servants);
+
     return {
         props: {
             liste_servants,
@@ -40,7 +43,14 @@ export const getServerSideProps = async (context) => {
 }
 
 export default function ListeDesServants({ liste_servants, servants_of_user, user}) {
-    const handleSubmit = async (servant, user_info = user) => {
+    //Déclaration des fonctions
+    /**
+     * Fonction qui permet d'ajouter un servant pour l'utilisateur connecté
+     *
+     * @param servant
+     * @param user_info
+     */
+    function addServant (servant: object, user_info: object = user) {
         let data = {
             servant, user_info
         }
@@ -54,34 +64,28 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
             body: JSON.stringify(data)
         }).then((res) => {
             if(res.status === 200){
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Succès',
-                    text: 'Ce servant à été ajouté ! ',
-                    confirmButtonColor: '#3b82f6',
-                    confirmButtonText: 'Valider',
+                setListeServant(prevListeServant => {
+                    const newListeServant = [...prevListeServant];
+                    let servantToUpdate = newListeServant.find(current_servant => current_servant.id === servant.id);
+                    servantToUpdate.existe = true;
+                    return newListeServant;
                 });
+                defineAlert("validation", "Le servant a bien été ajouté a votre collection");
             }else{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ERRRRRRRREURRR',
-                    text: 'Une erreur est survenue lors de la connexion.',
-                    cancelButtonColor: '#dc2626',
-                    cancelButtonText: 'Annuler',
-                });
+                defineAlert("erreur", "Erreur lors de l'ajout du servant");
             }
         }).catch(err => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erreur',
-                text: 'Une erreur est survenue lors de la connexion.',
-                cancelButtonColor: '#dc2626',
-                cancelButtonText: 'Annuler',
-            });
+            defineAlert("erreur", "Erreur lors de l'ajout du servant");
         })
     }
 
-    const handleDelete = async (servant, user_info = user) => {
+    /**
+     * Fonction qui permet de supprimer un servant dans la collection de l'utilisateur
+     *
+     * @param servant
+     * @param user_info
+     */
+    function deleteServant(servant: object, user_info: object = user) {
         let data = {
             servant, user_info
         }
@@ -95,35 +99,66 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
             body: JSON.stringify(data)
         }).then((res) => {
             if(res.status === 200){
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Succès',
-                    text: 'Ce servant à été supprimé de votre seconde archive ! ',
-                    confirmButtonColor: '#3b82f6',
-                    confirmButtonText: 'Valider',
+                setListeServant(prevListeServant => {
+                    const newListeServant = [...prevListeServant];
+                    let servantToUpdate = newListeServant.find(current_servant => current_servant.id === servant.id);
+                    servantToUpdate.existe = false;
+                    return newListeServant;
                 });
+                defineAlert("validation", "Le servant a bien été supprimé de votre collection");
             }else{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ERRRRRRRREURRR',
-                    text: 'Une erreur est survenue lors de la connexion.',
-                    cancelButtonColor: '#dc2626',
-                    cancelButtonText: 'Annuler',
-                });
+                defineAlert("erreur", "Une erreur est survenue lors de la suppresion de votre servant");
             }
         }).catch(err => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erreur',
-                text: 'Une erreur est survenue lors de la connexion.',
-                cancelButtonColor: '#dc2626',
-                cancelButtonText: 'Annuler',
-            });
-        })
+            defineAlert("erreur", "Une erreur est survenue lors de la suppresion de votre servant");
+        });
+    }
+
+    /**
+     * Fonction qui vas permettre de définir un message d'alerte et de le supprimer après
+     * @param etat
+     * @param message
+     */
+    function defineAlert(etat: string, message: string): void {
+        setEtatAlert(etat);
+        setMessageAlert(message);
+
+        setTimeout(() => {
+            setEtatAlert("");
+            setMessageAlert("");
+        }, 1500);
+    }
+
+    /**
+     * Fonction qui permet de changer de page dans le tableau
+     * 
+     * @param event
+     * @param page
+     */
+    const switchPage = (event: any, page: number) => {
+        event.preventDefault();
+        setCurrentPage(page);
+    };
+
+    const [listeServant, setListeServant] = useState(liste_servants);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage] = useState(5);
+    const [etatAlert, setEtatAlert] = useState('');
+    const [messageAlert, setMessageAlert] = useState('');
+
+    //Déclaration des variables
+    const indexOfLastRow = currentPage * rowsPerPage;
+    const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+    const currentRows = listeServant.slice(indexOfFirstRow, indexOfLastRow);
+    const pageNumbers = [];
+
+    for (let i = 1; i <= Math.ceil(liste_servants.length / rowsPerPage); i++) {
+        pageNumbers.push(i);
     }
 
     return(
         <>
+            <Alert etat={etatAlert} message={messageAlert}/>
             <Card>
                 <Title>Liste des servants</Title>
                 <Table className="mt-5">
@@ -137,14 +172,15 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {liste_servants.map((item) => {
-                            const hasServant = item.existe;
-
-                            if(hasServant){
+                        {currentRows.map((item) => {
+                            if(item.existe){
                                 return (
                                     <TableRow key={item.name} className={"bg-green-200 rounded"}>
-                                        <TableCell><img className={"w-1/4 rounded-lg shadow-md"} loading={"lazy"} src={item.extraAssets.faces.ascension[Object.keys(item.extraAssets.faces.ascension)[Object.keys(item.extraAssets.faces.ascension).length - 1]]}/></TableCell>
-                                        <TableCell>{item.name}</TableCell>
+                                        <TableCell>
+                                            <img className={"w-16 rounded-lg shadow-md"} alt={"servant_face"} loading={"lazy"} src={item.extraAssets.faces.ascension[Object.keys(item.extraAssets.faces.ascension)[Object.keys(item.extraAssets.faces.ascension).length - 1]]}/></TableCell>
+                                        <TableCell>
+                                            <Text>{item.name}</Text>
+                                        </TableCell>
                                         <TableCell>
                                             <Text>{item.className}</Text>
                                         </TableCell>
@@ -152,17 +188,22 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                                             <Text>{item.rarity}</Text>
                                         </TableCell>
                                         <TableCell>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hover:scale-105 cursor-pointer text-red-600" onClick={() => handleDelete(item) }>
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
+                                            <Button color={"red"} size={"xs"} onClick={() => deleteServant(item) }>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 );
                             }else{
                                 return (
                                     <TableRow key={item.name}>
-                                        <TableCell><img className={"w-1/4 rounded-lg shadow-md"} loading={"lazy"} src={item.extraAssets.faces.ascension[Object.keys(item.extraAssets.faces.ascension)[Object.keys(item.extraAssets.faces.ascension).length - 1]]}/></TableCell>
-                                        <TableCell>{item.name}</TableCell>
+                                        <TableCell>
+                                            <img className={"w-16 rounded-lg shadow-md"} alt={"servant_face"} loading={"lazy"} src={item.extraAssets.faces.ascension[Object.keys(item.extraAssets.faces.ascension)[Object.keys(item.extraAssets.faces.ascension).length - 1]]}/></TableCell>
+                                        <TableCell>
+                                            <Text>{item.name}</Text>
+                                        </TableCell>
                                         <TableCell>
                                             <Text>{item.className}</Text>
                                         </TableCell>
@@ -170,9 +211,11 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                                             <Text>{item.rarity}</Text>
                                         </TableCell>
                                         <TableCell>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hover:scale-105 cursor-pointer text-green-600" onClick={() => handleSubmit(item) }>
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
+                                            <Button color={"green"} size={"xs"} onClick={() => addServant(item) }>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -181,6 +224,21 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                         })}
                     </TableBody>
                 </Table>
+                <div className={"flex space-x-6 justify-center pt-6"}>
+                    <Button size={"xs"} className={"border-gray-300 py-2 px-4 text-black bg-white rounded hover:bg-blue-600 hover:text-white duration-200 shadow"} onClick={(e) => switchPage(e, currentPage - 1)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                        </svg>
+                    </Button>
+                    <Button  className={"border-gray-300 py-2 px-4 text-black bg-white rounded hover:bg-blue-600 hover:text-white duration-200 shadow"}>
+                        {currentPage}
+                    </Button>
+                    <Button size={"xs"} className={"border-gray-300 py-2 px-4 text-black bg-white rounded hover:bg-blue-600 hover:text-white duration-200 shadow"} onClick={(e) => switchPage(e, currentPage + 1)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </Button>
+                </div>
             </Card>
         </>
     );

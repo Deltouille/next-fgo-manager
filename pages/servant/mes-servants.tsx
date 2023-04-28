@@ -160,7 +160,7 @@ export default function MesServants({liste_servants, user}) {
         fetch("/api/servants/mes-servants/delete-servant-info", {
             method: "POST",
             headers: {
-                Accept: "application/json",
+                "Accept": "application/json",
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),

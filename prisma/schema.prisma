@@ -14,6 +14,7 @@ model User {
   role          String
   servant       ServantInfo[]
   craft_essence CraftEssenceInfo[]
+  story_event   StoryEventInfo[]
 }
 
 model Servant {
@@ -34,9 +35,9 @@ model ServantInfo {
   skill_1_lvl    Int      @default(1)
   skill_2_lvl    Int      @default(1)
   skill_3_lvl    Int      @default(1)
-  append_1_lvl   Int      @default(1)
-  append_2_lvl   Int      @default(1)
-  append_3_lvl   Int      @default(1)
+  append_1_lvl   Int      @default(0)
+  append_2_lvl   Int      @default(0)
+  append_3_lvl   Int      @default(0)
   fou_hp         Int      @default(0)
   fou_atk        Int      @default(0)
   bond_lvl       Int      @default(0)
@@ -62,6 +63,24 @@ model CraftEssenceInfo {
   craftEssenceId    Int
   is_mlb            Boolean      @default(false)
   craft_essence_lvl Int          @default(1)
-  user              User         @relation(fields: [userId], references: [id])
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            Int
+}
+
+model StoryEvent {
+  id                 Int              @id @default(autoincrement())
+  story_event_war_id Int
+  name               String
+  type               String
+  banner             String
+  story_event_info   StoryEventInfo[]
+}
+
+model StoryEventInfo {
+  id             Int        @id @default(autoincrement())
+  status         Int        @default(0)
+  story_event_id Int
+  story_event    StoryEvent @relation(fields: [story_event_id], references: [id], onDelete: Cascade)
+  user_id        Int
+  user           User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

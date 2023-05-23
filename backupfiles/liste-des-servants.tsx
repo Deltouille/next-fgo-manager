@@ -16,7 +16,6 @@ import {getUserData} from "@/lib/user";
 import {PrismaClient} from "@prisma/client";
 import {useState} from "react";
 import Alert from "@/components/Alert";
-import ServantCard from "@/components/Servant/ServantCard";
 
 export const getServerSideProps = async (context) => {
     const liste_servants = await fetchServantData();
@@ -144,7 +143,7 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
 
     /**
      * Fonction qui permet de changer de page dans le tableau
-     * 
+     *
      * @param event
      * @param page
      */
@@ -155,7 +154,7 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
 
     const [listeServant, setListeServant] = useState(liste_servants);
     const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage] = useState(9);
+    const [rowsPerPage] = useState(5);
     const [etatAlert, setEtatAlert] = useState('');
     const [messageAlert, setMessageAlert] = useState('');
 
@@ -173,20 +172,91 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
         <>
             <Alert etat={etatAlert} message={messageAlert}/>
             <Metric>Liste des Servants</Metric>
-            <div className={"grid grid-cols-3 gap-4 my-10"}>
-                {currentRows.map((item) => {
-                    if(item.existe){
-                        return (
-                            <ServantCard servant_class={item.className} servant_name={item.name} servant_face={item.extraAssets.faces} servant_stars={item.rarity}/>
-                        );
-                    }else{
-                        return (
-                            <ServantCard servant_class={item.className} servant_name={item.name} servant_face={item.extraAssets.faces} servant_stars={item.rarity}/>
-                        );
-                    }
-                })}
-            </div>
+            <div className="overflow-x-auto w-full">
+                <table className="table w-full">
+                    <thead>
+                    <tr>
+                        <th className={"bg-[#C5C5C5]"}>Servant</th>
+                        <th className={"bg-[#C5C5C5]"}>Classe</th>
+                        <th className={"bg-[#C5C5C5]"}>Favorite Color</th>
+                        <th className={"bg-[#C5C5C5]"}></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {currentRows.map((item) => {
+                        if(item.existe){
+                            return (
+                                <tr key={item.name} className={"bg-green-200 rounded"}>
+                                    <td>
+                                        <div className="flex items-center space-x-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle w-12 h-12">
+                                                    <img src={item.extraAssets.faces.ascension[Object.keys(item.extraAssets.faces.ascension)[Object.keys(item.extraAssets.faces.ascension).length - 1]]} alt="Avatar Tailwind CSS Component" loading={"lazy"}/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="font-bold">{item.name}</div>
+                                                <div className="text-sm opacity-50">United States</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <Text>{item.className}</Text>
+                                    </td>
+                                    <td>
+                                        <Text>{item.rarity}</Text>
+                                    </td>
+                                    <td>
+                                        <Button color={"red"} size={"xs"} onClick={() => deleteServant(item) }>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            );
+                        }else{
+                            return (
+                                <tr key={item.name}>
+                                    <td>
+                                        <div className="flex items-center space-x-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle w-12 h-12">
+                                                    <img src={item.extraAssets.faces.ascension[Object.keys(item.extraAssets.faces.ascension)[Object.keys(item.extraAssets.faces.ascension).length - 1]]} alt="Avatar Tailwind CSS Component" loading={"lazy"}/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="font-bold">{item.name}</div>
+                                                <div className="text-sm opacity-50">United States</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <Text>{item.className}</Text>
+                                    </td>
+                                    <td>
+                                        <Text>{item.rarity}</Text>
+                                    </td>
+                                    <td>
+                                        <Button color={"green"} size={"xs"} onClick={() => addServant(item) }>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            );
+                        }
 
+                    })}
+                    </tbody>
+                </table>
+            </div>
+            <div className="btn-group mx-auto justify-center flex">
+                <button className="btn" onClick={(e) => switchPage(e, currentPage - 1)}>«</button>
+                <button className="btn">Page {currentPage}</button>
+                <button className="btn" onClick={(e) => switchPage(e, currentPage + 1)}>»</button>
+            </div>
         </>
     );
 }

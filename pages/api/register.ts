@@ -1,5 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 
+/**
+ * Route "Login" de l'API : Enregistre un utilisateur
+ *
+ * Vérifie la présence de l'utilisateur dans la base de données.
+ * Hash le mot de passe.
+ * Enregistre l'utilisateur dans la base de données.
+ *
+ * @param req
+ * @param res
+ */
 export default async function (req, res) {
 
     const bcrypt = require('bcrypt');
@@ -24,7 +34,7 @@ export default async function (req, res) {
             role: 'ROLE_USER'
         }
 
-        const createUser = await prisma.User.create({ data: user })
+        const createUser = await prisma.user.create({ data: user })
 
         res.status(200).json({message: "Votre compte a bien été créer ! "});
     }else{

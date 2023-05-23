@@ -1,18 +1,12 @@
-import {useProSidebar} from "react-pro-sidebar";
-import { Button } from "@tremor/react";
-
-export default function Header({children}) {
-    const { collapseSidebar, toggleSidebar, collapsed, toggled, broken, rtl } = useProSidebar();
-
+export default function Header() {
     return (
-        <header className={"border-b border-gray-200 w-full h-16"}>
+        <header className={"border-b border-gray-200 w-full h-16 lg:hidden"}>
             <div className={"mx-4 flex flex-row my-2"}>
-                <Button className={"bg-transparent hover:bg-transparent focus:border-none border-none shadow-none"} size="xs" onClick={() => collapseSidebar()}>
+                <label htmlFor="my-drawer-2" className="btn bg-white drawer-button lg:hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-black">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
-                </Button>
-                {children}
+                </label>
             </div>
         </header>
     )

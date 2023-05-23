@@ -1,6 +1,17 @@
 import {PrismaClient} from "@prisma/client";
 import {serialize} from "cookie";
 import * as jose from 'jose';
+
+/**
+ * Route "Login" de l'API : Connecte un utilisateur
+ *
+ * Vérifie la présence de l'utilisateur dans la base de données.
+ * Vérifie que le mot de passe de l'utilisateur correspond à celui présent en base de données
+ * Créer un cookie "JSON Web Token" qui vas servir a authentifier un utilisateur.
+ *
+ * @param req
+ * @param res
+ */
 export default async function (req, res){
     const bcrypt = require('bcrypt')
 

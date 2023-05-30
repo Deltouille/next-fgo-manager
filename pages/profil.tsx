@@ -320,7 +320,7 @@ export default function Profil({ servants,  servants_of_user, craft_essences, cr
     ];
 
     return(
-        <div>
+        <div className="mx-auto w-5/6 pt-4">
             <Metric>Servants</Metric>
             <Divider></Divider>
             <Grid numCols={1} numColsSm={2} numColsLg={4} className="gap-5">

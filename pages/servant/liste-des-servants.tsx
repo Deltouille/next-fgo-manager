@@ -9,7 +9,8 @@ import {
     TableBody,
     TableCell,
     Button,
-    Metric
+    Metric,
+    Divider
 } from "@tremor/react";
 import {fetchServantData} from "@/lib/api";
 import {getUserData} from "@/lib/user";
@@ -170,23 +171,67 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
     }
 
     return(
-        <>
+        <div className="mx-auto p-4 w-5/6">
             <Alert etat={etatAlert} message={messageAlert}/>
             <Metric>Liste des Servants</Metric>
-            <div className={"grid grid-cols-3 gap-4 my-10"}>
-                {currentRows.map((item) => {
-                    if(item.existe){
-                        return (
-                            <ServantCard servant_class={item.className} servant_name={item.name} servant_face={item.extraAssets.faces} servant_stars={item.rarity}/>
-                        );
-                    }else{
-                        return (
-                            <ServantCard servant_class={item.className} servant_name={item.name} servant_face={item.extraAssets.faces} servant_stars={item.rarity}/>
-                        );
-                    }
-                })}
+            <Divider/>
+            <div className="overflow-x-auto w-full">
+                <table className="table table-zebra w-full">
+                    <thead >
+                        <tr >
+                            <th>
+                            <label>
+                                <input type="checkbox" className="checkbox" />
+                            </label>
+                            </th>
+                            <th>Servant</th>
+                            <th>Classe</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {currentRows.map((item) => {
+                            if(item.existe){
+                            
+                            }else{
+                                return (
+                                    <tr>
+                                        <th>
+                                            <label>
+                                                <input type="checkbox" className="checkbox" />
+                                            </label>
+                                        </th>
+                                        <td>
+                                            <div className="flex items-center space-x-3">
+                                                <div className="avatar">
+                                                    <div className="mask mask-squircle w-12 h-12">
+                                                        <img src={item.extraAssets.faces.ascension[Object.keys(item.extraAssets.faces.ascension)[Object.keys(item.extraAssets.faces.ascension).length - 1]]} alt="Avatar Tailwind CSS Component" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold">{item.name}</div>
+                                                    <div className="text-sm opacity-50">United States</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {item.className}
+                                        </td>
+                                        <th>
+                                            <button className="btn btn-ghost btn-xs">details</button>
+                                        </th>
+                                    </tr>
+                                );
+                            }
+                        })}
+                    </tbody>
+                </table>
             </div>
-
-        </>
+            <div className="btn-group mx-auto">
+                <button className="btn">«</button>
+                <button className="btn">Page 22</button>
+                <button className="btn">»</button>
+            </div>
+        </div>
     );
 }

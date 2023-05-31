@@ -18,6 +18,7 @@ import {PrismaClient} from "@prisma/client";
 import {useState} from "react";
 import Alert from "@/components/Alert";
 import ServantCard from "@/components/Servant/ServantCard";
+import Stars from "@/components/Stars";
 
 export const getServerSideProps = async (context) => {
     const liste_servants = await fetchServantData();
@@ -175,6 +176,52 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
             <Alert etat={etatAlert} message={messageAlert}/>
             <Metric>Liste des Servants</Metric>
             <Divider/>
+            <div className="flex flex-row pb-4 gap-5">
+                <div className="form-control">
+                    <div className="input-group">
+                        <input type="text" placeholder="Search…" className="input input-bordered" />
+                        <button className="btn btn-square">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </button>
+                    </div>
+                </div>
+                <select className="select select-bordered w-full max-w-xs">
+                    <option disabled selected>Trier par rareté</option>
+                    <option>Han Solo</option>
+                    <option>Greedo</option>
+                </select>
+                <select className="select select-bordered w-full max-w-xs">
+                    <option disabled selected>Trier par classe</option>
+                    <option>Saber</option>
+                    <option>Archer</option>
+                    <option>Lancer</option>
+                    <option>Rider</option>
+                    <option>Caster</option>
+                    <option>Assassin</option>
+                    <option>Berserker</option>
+                    <option>Ruler</option>
+                    <option>Avenger</option>
+                    <option>Moon Cancer</option>
+                    <option>Alter Ego</option>
+                    <option>Foreigner</option>
+                    <option>Pretender</option>
+                    <option>Shielder</option>
+                    <option>Beast</option>
+                </select>
+
+                <div className="btn-group justify-self-end">
+                    <button className="btn bg-green-500 hover:bg-green-600 border-green-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </button>
+                    <button className="btn bg-red-500 hover:bg-red-600 border-red-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
             <div className="overflow-x-auto w-full">
                 <table className="table table-zebra w-full">
                     <thead >
@@ -210,15 +257,17 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                                                 </div>
                                                 <div>
                                                     <div className="font-bold">{item.name}</div>
-                                                    <div className="text-sm opacity-50">United States</div>
+                                                    <Stars nb_stars={item.rarity}/>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            {item.className}
+                                            <img src="https://static.wikia.nocookie.net/fategrandorder/images/2/20/Class-Saber-Gold.webp" className="w-12 h-12" alt="" />
                                         </td>
                                         <th>
-                                            <button className="btn btn-ghost btn-xs">details</button>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
                                         </th>
                                     </tr>
                                 );
@@ -227,10 +276,12 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                     </tbody>
                 </table>
             </div>
+            <div className="w-full flex">
             <div className="btn-group mx-auto">
-                <button className="btn">«</button>
-                <button className="btn">Page 22</button>
-                <button className="btn">»</button>
+                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">«</button>
+                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">Page 1</button>
+                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">»</button>
+            </div>
             </div>
         </div>
     );

@@ -176,7 +176,7 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
             <Alert etat={etatAlert} message={messageAlert}/>
             <Metric>Liste des Servants</Metric>
             <Divider/>
-            <div className="flex flex-row pb-4 gap-5">
+            <div className="flex flex-col lg:flex-row pb-4 gap-5">
                 <div className="form-control">
                     <div className="input-group">
                         <input type="text" placeholder="Search…" className="input input-bordered" />

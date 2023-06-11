@@ -24,7 +24,13 @@ export async function fetchStoryData() {
     return data;
 }
 
-export async function fetStoryEventDetails(id: number) {
+export async function fetchEventData() {
+    const response = await fetch('https://api.atlasacademy.io/export/JP/nice_war_lang_en.json');
+    const data = await response.json();
+    return data;
+}
+
+export async function fetchStoryEventDetails(id: number) {
     const response = await fetch(`https://api.atlasacademy.io/nice/JP/war/${id}?lang=en`);
     const data = await response.json();
     return data;

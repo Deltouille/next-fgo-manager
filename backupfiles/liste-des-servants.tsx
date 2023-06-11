@@ -1,13 +1,5 @@
 import {
-    Card,
     Text,
-    Title,
-    Table,
-    TableHead,
-    TableRow,
-    TableHeaderCell,
-    TableBody,
-    TableCell,
     Button,
     Metric
 } from "@tremor/react";

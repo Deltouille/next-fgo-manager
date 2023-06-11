@@ -1,24 +1,7 @@
 import {
-    Grid,
-    Col,
-    Card,
-    Text,
     Metric,
-    Title,
-    LineChart,
     Divider,
-    BarChart,
-    Subtitle,
-    Table,
-    TableHead,
-    TableRow,
-    TableHeaderCell,
-    TableBody,
-    TableCell,
-    Badge,
-    Button
 } from "@tremor/react";
-import {ProgressBar, MarkerBar, DeltaBar, RangeBar, CategoryBar} from "@tremor/react";
 import {fetchCraftEssencesData} from "@/lib/api";
 import {PrismaClient} from "@prisma/client";
 import {getUserData} from "@/lib/user";
@@ -86,6 +69,12 @@ export default function ListeDesCraftEssences({ liste_craft_essences, user }) {
         })
     }
 
+    function addCeBatch(user_info: object = user){
+        checkedRows.map((current_row) => {
+            addCraftEssence(current_row, user_info);
+        })
+    }
+
     const deleteCraftEssence = async (craft_essence, user_info = user) => {
         let data = {
             craft_essence, user_info
@@ -140,6 +129,23 @@ export default function ListeDesCraftEssences({ liste_craft_essences, user }) {
     const [rowsPerPage] = useState(10);
     const [etatAlert, setEtatAlert] = useState('');
     const [messageAlert, setMessageAlert] = useState('');
+    const [checked, setChecked] = useState(false);
+    const [checkedRows, setCheckedRows] = useState([]);
+    function handleCheckButton(){
+        setChecked(!checked);
+    }
+
+    const handleCheckRow = (row) => {
+        if (checked) {
+            if (checkedRows.includes(row)) {
+                setCheckedRows(checkedRows.filter((item) => item !== row));
+            } else {
+                setCheckedRows([...checkedRows, row]);
+            }
+        } else {
+            // Gérer le changement de l'état des cases à cocher individuelles ici
+        }
+    };
 
     //Déclaration des variables
     const indexOfLastRow = currentPage * rowsPerPage;
@@ -178,7 +184,7 @@ export default function ListeDesCraftEssences({ liste_craft_essences, user }) {
                 </select>
 
                 <div className="btn-group justify-self-end">
-                    <button className="btn bg-green-500 hover:bg-green-600 border-green-700">
+                    <button className="btn bg-green-500 hover:bg-green-600 border-green-700" onClick={() => addCeBatch()}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -196,7 +202,7 @@ export default function ListeDesCraftEssences({ liste_craft_essences, user }) {
                         <tr >
                             <th>
                             <label>
-                                <input type="checkbox" className="checkbox" />
+                                <input type="checkbox" className="checkbox" checked={checked} onClick={() => handleCheckButton()}/>
                             </label>
                             </th>
                             <th>Craft Essence</th>
@@ -227,7 +233,7 @@ export default function ListeDesCraftEssences({ liste_craft_essences, user }) {
                                     <tr>
                                         <th>
                                             <label>
-                                                <input type="checkbox" className="checkbox" />
+                                                <input type="checkbox" className="checkbox" checked={checkedRows.includes(item)} onChange={() => handleCheckRow(item)}/>
                                             </label>
                                         </th>
                                         <td>
@@ -260,9 +266,9 @@ export default function ListeDesCraftEssences({ liste_craft_essences, user }) {
             </div>
             <div className="w-full flex pt-4">
                 <div className="btn-group mx-auto">
-                    <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">«</button>
-                    <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">Page 1</button>
-                    <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">»</button>
+                    <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600" onClick={(e) => switchPage(e, currentPage - 1)}>«</button>
+                    <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">Page {currentPage}</button>
+                    <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600" onClick={(e) => switchPage(e, currentPage + 1)}>»</button>
                 </div>
             </div>
         </div>

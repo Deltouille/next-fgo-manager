@@ -1,14 +1,4 @@
 import {
-    Card,
-    Text,
-    Title,
-    Table,
-    TableHead,
-    TableRow,
-    TableHeaderCell,
-    TableBody,
-    TableCell,
-    Button,
     Metric,
     Divider
 } from "@tremor/react";
@@ -17,7 +7,6 @@ import {getUserData} from "@/lib/user";
 import {PrismaClient} from "@prisma/client";
 import {useState} from "react";
 import Alert from "@/components/Alert";
-import ServantCard from "@/components/Servant/ServantCard";
 import Stars from "@/components/Stars";
 
 export const getServerSideProps = async (context) => {
@@ -94,6 +83,12 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
         })
     }
 
+    function addServantBatch(user_info: object = user){
+        checkedRows.map((current_row) => {
+            addServant(current_row, user_info);
+        })
+    }
+
     /**
      * Fonction qui permet de supprimer un servant dans la collection de l'utilisateur
      *
@@ -160,6 +155,23 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
     const [rowsPerPage] = useState(9);
     const [etatAlert, setEtatAlert] = useState('');
     const [messageAlert, setMessageAlert] = useState('');
+    const [checked, setChecked] = useState(false);
+    const [checkedRows, setCheckedRows] = useState([]);
+    function handleCheckButton(){
+        setChecked(!checked);
+    }
+
+    const handleCheckRow = (row) => {
+        if (checked) {
+            if (checkedRows.includes(row)) {
+                setCheckedRows(checkedRows.filter((item) => item !== row));
+            } else {
+                setCheckedRows([...checkedRows, row]);
+            }
+        } else {
+            // Gérer le changement de l'état des cases à cocher individuelles ici
+        }
+    };
 
     //Déclaration des variables
     const indexOfLastRow = currentPage * rowsPerPage;
@@ -210,7 +222,7 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                 </select>
 
                 <div className="btn-group justify-self-end">
-                    <button className="btn bg-green-500 hover:bg-green-600 border-green-700">
+                    <button className="btn bg-green-500 hover:bg-green-600 border-green-700" onClick={() => addServantBatch()}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -228,7 +240,7 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                         <tr >
                             <th>
                             <label>
-                                <input type="checkbox" className="checkbox" />
+                                <input type="checkbox" className="checkbox" checked={checked} onClick={() => handleCheckButton()}/>
                             </label>
                             </th>
                             <th>Servant</th>
@@ -237,15 +249,15 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                         </tr>
                     </thead>
                     <tbody>
-                        {currentRows.map((item) => {
+                        {currentRows.map((item, index) => {
                             if(item.existe){
-                            
+
                             }else{
                                 return (
-                                    <tr>
+                                    <tr key={index}>
                                         <th>
                                             <label>
-                                                <input type="checkbox" className="checkbox" />
+                                                <input type="checkbox" className="checkbox" checked={checkedRows.includes(item)} onChange={() => handleCheckRow(item)} />
                                             </label>
                                         </th>
                                         <td>
@@ -278,9 +290,9 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
             </div>
             <div className="w-full flex">
             <div className="btn-group mx-auto">
-                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">«</button>
-                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">Page 1</button>
-                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">»</button>
+                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600" onClick={(e) => switchPage(e, currentPage - 1)}>«</button>
+                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600">Page {currentPage}</button>
+                <button className="btn bg-blue-600 hover:bg-blue-500 border-blue-600" onClick={(e) => switchPage(e, currentPage + 1)}>»</button>
             </div>
             </div>
         </div>

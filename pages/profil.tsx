@@ -319,6 +319,34 @@ export default function Profil({ servants,  servants_of_user, craft_essences, cr
         },
     ];
 
+
+    const data = [
+        {
+            Month: "Observert on Timeless Temple",
+            Todo: 3,
+            EnCours: 1,
+            Done: 5,
+        },
+        {
+            Month: "Epic Of Remnant",
+            Todo: 0,
+            EnCours: 0,
+            Done: 4,
+        },
+        {
+            Month: "Cosmos in the Lostbelt",
+            Todo: 0,
+            EnCours: 0,
+            Done: 9,
+        },
+        {
+            Month: "Ordeal Call",
+            Todo: 1,
+            EnCours: 0,
+            Done: 0,
+        },
+    ];
+
     return(
         <div className="mx-auto w-5/6 pt-4">
             <Metric>Servants</Metric>
@@ -497,66 +525,26 @@ export default function Profil({ servants,  servants_of_user, craft_essences, cr
             <Metric className={"mt-5"}>Histoire et évenements</Metric>
             <Divider></Divider>
             <Grid numCols={1} numColsSm={2} numColsLg={4} className="gap-5">
-                <Col numColSpan={1} numColSpanLg={2}>
+                <Col numColSpan={1} numColSpanLg={4}>
                     <Card>
                         <Title>Avancement histoire</Title>
                         <ProgressBar percentageValue={95} color="cyan" className="mt-3" />
                     </Card>
                 </Col>
-                <Col numColSpan={1} numColSpanLg={2}>
+                <Col numColSpan={1} numColSpanLg={4}>
                     <Card>
-                        <Title>Avancement évennements</Title>
-                        <ProgressBar percentageValue={95} color="cyan" className="mt-3" />
-                    </Card>
-                </Col>
-                <Col numColSpan={1} numColSpanLg={2}>
-                    <Card>
-                        <Title>Liste des chapitres</Title>
-                        <Table className="mt-5">
-                            <TableHead>
-                                <TableRow>
-                                    <TableHeaderCell>Name</TableHeaderCell>
-                                    <TableHeaderCell>Status</TableHeaderCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {tableData.map((item) => (
-                                    <TableRow key={item.name}>
-                                        <TableCell>{item.name}</TableCell>
-                                        <TableCell>
-                                            <Badge color="emerald">
-                                                {item.status}
-                                            </Badge>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </Card>
-                </Col>
-                <Col numColSpan={1} numColSpanLg={2}>
-                    <Card>
-                        <Title>Liste des events</Title>
-                        <Table className="mt-5">
-                            <TableHead>
-                                <TableRow>
-                                    <TableHeaderCell>Name</TableHeaderCell>
-                                    <TableHeaderCell>Status</TableHeaderCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {tableData.map((item) => (
-                                    <TableRow key={item.name}>
-                                        <TableCell>{item.name}</TableCell>
-                                        <TableCell>
-                                            <Badge color="emerald">
-                                                {item.status}
-                                            </Badge>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                        <Title>Avancement par arc narratif</Title>
+                        <BarChart
+                            className="mt-4 h-80"
+                            data={data}
+                            index="Month"
+                            categories={["Todo", "EnCours", "Done"]}
+                            colors={["gray", "orange", "green"]}
+                            stack={false}
+                            valueFormatter={(number: number) =>
+                                `$ ${Intl.NumberFormat("us").format(number).toString()}`
+                            }
+                        />
                     </Card>
                 </Col>
             </Grid>

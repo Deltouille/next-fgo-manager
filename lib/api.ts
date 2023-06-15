@@ -19,7 +19,7 @@ export async function fetchMaterialData() {
 }
 
 export async function fetchStoryData() {
-    const response = await fetch('https://api.atlasacademy.io/export/JP/basic_war_lang_en.json');
+    const response = await fetch('https://api.atlasacademy.io/export/NA/nice_war.json');
     const data = await response.json();
     return data;
 }

@@ -1,36 +1,22 @@
-import {fetchStoryData} from "@/lib/api";
-import {Card, Col, Divider, Grid, Metric, Text, Title, Button, Flex, ProgressBar} from "@tremor/react";
+import {fetchStoryEventDetails} from "@/lib/api";
+import {Divider, Metric, Title} from "@tremor/react";
 
 export const getServerSideProps = async () => {
+    const war_details = await fetchStoryEventDetails(101);
 
-    const chapters = await fetchStoryData();
-
-    let story_chapters: [] = [];
-
-    story_chapters = chapters
-        .filter((current_chapter) => {
-            return current_chapter.flags.includes("mainScenario");
-        })
-        .map((current_chapter) => {
-                return {
-                    name: current_chapter.longName,
-                    type: "Story",
-                    id: current_chapter.id,
-                    banner: current_chapter.banner
-                };
-        });
+    console.log(war_details);
 
     return {
         props: {
-            story_chapters
+            war_details
         }
     }
 }
 
-export default function Histoire({story_chapters}){
-    return(
+export default function Details ({war_details}) {
+    return (
         <div className="mx-auto p-4 w-5/6">
-            <Metric>Chapitres d'histoire</Metric>
+            <Metric>{war_details.longName}</Metric>
             <Divider/>
             <div className="flex flex-col lg:flex-row pb-4 gap-5">
                 <div className="form-control">
@@ -55,14 +41,16 @@ export default function Histoire({story_chapters}){
                     <option>Terminé</option>
                 </select>
             </div>
-            <div className={"grid grid-cols-1 lg:grid-cols-3 lg:gap-10 gap-5"}>
-                {story_chapters.map((current_chapter) => {
-                    console.log(current_chapter);
+            <div className={"grid grid-cols-4 gap-10"}>
+                {war_details.spots.map((current_spot) => {
                     return (
-                        <div className={"flex flex-col"}>
-                            <img className={""} src={current_chapter.banner}/>
+                        <div className={"div flex"}>
+                            <img className={"w-32"} src={current_spot.image}/>
+                            <div className={"flex flex-col"}>
+                                <Title>{current_spot.name}</Title>
+                            </div>
                         </div>
-                    );
+                    )
                 })}
             </div>
         </div>

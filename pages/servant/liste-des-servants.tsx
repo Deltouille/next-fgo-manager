@@ -191,12 +191,13 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
             <div className="flex flex-col lg:flex-row pb-4 gap-5">
                 <div className="form-control">
                     <div className="input-group">
-                        <input type="text" placeholder="Search…" className="input input-bordered" />
+                        <input type="text" placeholder="Search…" className="input input-bordered w-full" />
                         <button className="btn btn-square">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         </button>
                     </div>
                 </div>
+                <p className={"font-bold text-blue-600"}>+ de filtres</p>
                 <select className="select select-bordered w-full max-w-xs">
                     <option disabled selected>Trier par rareté</option>
                     <option>Han Solo</option>
@@ -260,7 +261,7 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                                                 <input type="checkbox" className="checkbox" checked={checkedRows.includes(item)} onChange={() => handleCheckRow(item)} />
                                             </label>
                                         </th>
-                                        <td>
+                                        <th>
                                             <div className="flex items-center space-x-3">
                                                 <div className="avatar">
                                                     <div className="mask mask-squircle w-12 h-12">
@@ -272,7 +273,7 @@ export default function ListeDesServants({ liste_servants, servants_of_user, use
                                                     <Stars nb_stars={item.rarity}/>
                                                 </div>
                                             </div>
-                                        </td>
+                                        </th>
                                         <td>
                                             <img src="https://static.wikia.nocookie.net/fategrandorder/images/2/20/Class-Saber-Gold.webp" className="w-12 h-12" alt="" />
                                         </td>

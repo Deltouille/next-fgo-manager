@@ -27,27 +27,15 @@ export default function Details ({war_details}) {
                         </button>
                     </div>
                 </div>
-                <select className="select select-bordered w-full max-w-xs">
-                    <option disabled selected>Arc narratif</option>
-                    <option>Observer over Timeless Temple</option>
-                    <option>Epic of Remnant</option>
-                    <option>Cosmos in the Lostbelt</option>
-                    <option>Ordeal Call</option>
-                </select>
-                <select className="select select-bordered w-full max-w-xs">
-                    <option disabled selected>Trier par état</option>
-                    <option>En attente</option>
-                    <option>En cours</option>
-                    <option>Terminé</option>
-                </select>
             </div>
-            <div className={"grid grid-cols-4 gap-10"}>
+            <div className={"grid grid-cols-1 lg:grid-cols-4 gap-10"}>
                 {war_details.spots.map((current_spot) => {
                     return (
                         <div className={"div flex"}>
                             <img className={"w-32"} src={current_spot.image}/>
-                            <div className={"flex flex-col"}>
+                            <div className={"flex flex-col mt-auto gap-3"}>
                                 <Title>{current_spot.name}</Title>
+                                <input type="checkbox" className="toggle toggle-primary mb-5" />
                             </div>
                         </div>
                     )
